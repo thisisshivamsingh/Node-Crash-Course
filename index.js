@@ -111,16 +111,54 @@
 
 ///// ***** /////
 
+// const express = require("express");
+// const path = require("path");
+
+// const app = express();
+// const publicPath = path.join(__dirname, "public");
+
+// // app.use(express.static(publicPath));
+
+// app.get("", (_, resp) => {
+//   resp.sendFile(`${publicPath}/index.html`);
+// });
+
+// app.get("/about", (_, resp) => {
+//   resp.sendFile(`${publicPath}/about.html`);
+// });
+
+// app.get("/help", (_, resp) => {
+//   resp.sendFile(`${publicPath}/help.html`);
+// });
+
+// app.get("*", (_, resp) => {
+//   resp.sendFile(`${publicPath}/nopage.html`);
+// });
+
+// app.listen(5000);
+
+///// ***** /////
+
 const express = require("express");
 const path = require("path");
 
 const app = express();
 const publicPath = path.join(__dirname, "public");
 
-// app.use(express.static(publicPath));
+app.set("view engine", "ejs");
 
 app.get("", (_, resp) => {
   resp.sendFile(`${publicPath}/index.html`);
+});
+
+app.get("/profile", (_, resp) => {
+  const user = {
+    name: "Peter",
+    email: "peter@test.com",
+    country: "USA",
+    skills: ["php", "js", "c++", "java", "node"],
+  };
+  resp.render("profile", { user });
 });
 
 app.get("/about", (_, resp) => {
