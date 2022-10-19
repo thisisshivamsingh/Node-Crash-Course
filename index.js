@@ -139,38 +139,99 @@
 
 ///// ***** /////
 
+// const express = require("express");
+// const path = require("path");
+
+// const app = express();
+// const publicPath = path.join(__dirname, "public");
+
+// app.set("view engine", "ejs");
+
+// app.get("", (_, resp) => {
+//   resp.sendFile(`${publicPath}/index.html`);
+// });
+
+// app.get("/profile", (_, resp) => {
+//   const user = {
+//     name: "Peter",
+//     email: "peter@test.com",
+//     country: "USA",
+//     skills: ["php", "js", "c++", "java", "node"],
+//   };
+//   resp.render("profile", { user });
+// });
+
+// app.get("/login", (_, resp) => {
+//   resp.render("login");
+// });
+
+// app.get("/about", (_, resp) => {
+//   resp.sendFile(`${publicPath}/about.html`);
+// });
+
+// app.get("/help", (_, resp) => {
+//   resp.sendFile(`${publicPath}/help.html`);
+// });
+
+// app.get("*", (_, resp) => {
+//   resp.sendFile(`${publicPath}/nopage.html`);
+// });
+
+// app.listen(5000);
+
+///// ***** /////
+
+// const express = require("express");
+// const app = express();
+
+// const reqFilter = (req, resp, next) => {
+//   if (!req.query.age) {
+//     resp.send("Please provide age");
+//   } else if (req.query.age < 18) {
+//     resp.send("You can not access this page");
+//   } else {
+//     next();
+//   }
+// };
+
+// app.use(reqFilter);
+
+// app.get("/", (req, resp) => {
+//   resp.send("Welcome to Home Page");
+// });
+
+// app.get("/users", (req, resp) => {
+//   resp.send("Welcome to Users Page");
+// });
+
+// app.listen(5000);
+
+///// ***** /////
+
 const express = require("express");
-const path = require("path");
-
+const reqFilter = require("./middleware");
 const app = express();
-const publicPath = path.join(__dirname, "public");
+const route = express.Router();
 
-app.set("view engine", "ejs");
+// app.use(reqFilter);
 
-app.get("", (_, resp) => {
-  resp.sendFile(`${publicPath}/index.html`);
+route.use(reqFilter);
+app.get("/", (req, resp) => {
+  resp.send("Welcome to Home Page");
 });
 
-app.get("/profile", (_, resp) => {
-  const user = {
-    name: "Peter",
-    email: "peter@test.com",
-    country: "USA",
-    skills: ["php", "js", "c++", "java", "node"],
-  };
-  resp.render("profile", { user });
+app.get("/users", reqFilter, (req, resp) => {
+  resp.send("Welcome to Users Page");
 });
 
-app.get("/about", (_, resp) => {
-  resp.sendFile(`${publicPath}/about.html`);
+route.get("/about", reqFilter, (req, resp) => {
+  resp.send("Welcome to About Page");
 });
 
-app.get("/help", (_, resp) => {
-  resp.sendFile(`${publicPath}/help.html`);
+route.get("/contact", reqFilter, (req, resp) => {
+  resp.send("Welcome to Contact Page");
 });
 
-app.get("*", (_, resp) => {
-  resp.sendFile(`${publicPath}/nopage.html`);
-});
+app.use("/", route);
 
 app.listen(5000);
