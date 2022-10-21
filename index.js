@@ -208,30 +208,51 @@
 
 ///// ***** /////
 
-const express = require("express");
-const reqFilter = require("./middleware");
-const app = express();
-const route = express.Router();
+// const express = require("express");
+// const reqFilter = require("./middleware");
+// const app = express();
+// const route = express.Router();
 
-// app.use(reqFilter);
+// // app.use(reqFilter);
 
-route.use(reqFilter);
-app.get("/", (req, resp) => {
-  resp.send("Welcome to Home Page");
+// route.use(reqFilter);
+// app.get("/", (req, resp) => {
+//   resp.send("Welcome to Home Page");
+// });
+
+// app.get("/users", reqFilter, (req, resp) => {
+//   resp.send("Welcome to Users Page");
+// });
+
+// route.get("/about", reqFilter, (req, resp) => {
+//   resp.send("Welcome to About Page");
+// });
+
+// route.get("/contact", reqFilter, (req, resp) => {
+//   resp.send("Welcome to Contact Page");
+// });
+
+// app.use("/", route);
+
+// app.listen(5000);
+
+///// ***** /////
+
+const dbConnect = require("./mongodb");
+
+dbConnect().then((resp) => {
+  resp
+    .find()
+    .toArray()
+    .then((data) => {
+      console.warn(data);
+    });
 });
 
-app.get("/users", reqFilter, (req, resp) => {
-  resp.send("Welcome to Users Page");
-});
+// const main = async () => {
+//   let data = await dbConnect();
+//   data = await data.find().toArray();
+//   console.log(data);
+// };
 
-route.get("/about", reqFilter, (req, resp) => {
-  resp.send("Welcome to About Page");
-});
-
-route.get("/contact", reqFilter, (req, resp) => {
-  resp.send("Welcome to Contact Page");
-});
-
-app.use("/", route);
-
-app.listen(5000);
+// main();
