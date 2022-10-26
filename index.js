@@ -238,16 +238,16 @@
 
 ///// ***** /////
 
-const dbConnect = require("./mongodb");
+// const dbConnect = require("./mongodb");
 
-dbConnect().then((resp) => {
-  resp
-    .find()
-    .toArray()
-    .then((data) => {
-      console.warn(data);
-    });
-});
+// dbConnect().then((resp) => {
+//   resp
+//     .find()
+//     .toArray()
+//     .then((data) => {
+//       console.warn(data);
+//     });
+// });
 
 // const main = async () => {
 //   let data = await dbConnect();
@@ -256,3 +256,106 @@ dbConnect().then((resp) => {
 // };
 
 // main();
+
+///// ***** /////
+
+// const mongoose = require("mongoose");
+
+// const main = async () => {
+//   await mongoose.connect("mongodb://localhost:27017/e-comm");
+//   const ProductSchema = new mongoose.Schema({
+//     name: String,
+//     price: Number,
+//   });
+//   const ProductsModel = mongoose.model("products", ProductSchema);
+//   let data = new ProductsModel({ name: "m8", price: 1000 });
+//   let result = await data.save();
+//   console.log(result);
+// };
+
+// main();
+
+///// ***** /////
+
+// const mongoose = require("mongoose");
+
+// mongoose.connect("mongodb://localhost:27017/e-comm");
+
+// const productSchema = new mongoose.Schema({
+//   name: String,
+//   price: Number,
+//   brand: String,
+//   category: String,
+// });
+
+// const saveInDB = async () => {
+//   const ProductsModel = mongoose.model("products", productSchema);
+//   let data = new ProductsModel({
+//     name: "Note Pro",
+//     price: 250,
+//     brand: "maxx",
+//     category: "Mobile",
+//   });
+//   let result = await data.save();
+//   console.log(result);
+// };
+
+// const updateInDB = async () => {
+//   const Product = mongoose.model("products", productSchema);
+//   let data = await Product.updateOne(
+//     { name: "max 7" },
+//     {
+//       $set: { price: 750, name: "max 8" },
+//     }
+//   );
+//   console.log(data);
+// };
+
+// const deleteInDB = async () => {
+//   const Product = mongoose.model("products", productSchema);
+//   let data = await Product.deleteOne({ name: "max 8" });
+//   console.log(data);
+// };
+
+// const findInDB = async () => {
+//   const Product = mongoose.model("products", productSchema);
+//   let data = await Product.find({ name: "max 1311" });
+//   console.log(data);
+// };
+// findInDB();
+
+///// ***** /////
+
+const express = require("express");
+require("./config");
+const Product = require("./product");
+
+const app = express();
+app.use(express.json());
+app.post("/create", async (req, resp) => {
+  let data = new Product(req.body);
+  let result = await data.save();
+  // console.log(result);
+  resp.send(result);
+});
+
+app.get("/list", async (req, resp) => {
+  let data = await Product.find();
+  resp.send(data);
+});
+
+app.delete("/delete/:_id", async (req, resp) => {
+  console.log(req.params);
+  let data = await Product.deleteOne(req.params);
+  resp.send(data);
+});
+
+app.put("/update/:_id", async (req, resp) => {
+  console.log(req.params);
+  let data = await Product.updateOne(req.params, {
+    $set: req.body,
+  });
+  resp.send(data);
+});
+
+app.listen(5000);
